@@ -1,5 +1,5 @@
 #ifdef GL_ES
-precision highp float;
+precision mediump float;
 #endif
 
 #include "../lib/lygia/draw/circle.glsl"
@@ -43,15 +43,18 @@ void main (void) {
   vec2 st = gl_FragCoord.xy / u_resolution.xy;
   st = ratio(st, u_resolution);
   vec2 paperTexCoord = 0.12 * st;
-  float yShift = decimate(ramp(u_time * 0.9), 6.);
+  float yShift = decimate(
+    ramp(u_time * (0.8 + 0.8 * sin(0.0001*u_time))),
+    6.
+  );
   paperTexCoord = vec2(
-    paperTexCoord.x + 0.040,
+    paperTexCoord.x + 0.04,
     paperTexCoord.y + 0.03 + yShift
   );
   vec3 paperTexColor = texture2D(u_paperTexture, paperTexCoord).rgb;
 
-  vec3 color = vec3(st.x, st.y, abs(sin(u_time * 0.1)));
   float n = voronoise(vec2(st.x, st.y + yShift) * 10.0, 0.9, 0.9);
+  vec3 color = vec3(st.x, st.y - 0.1 * n, abs(sin(u_time * 0.3)));
 
   vec2 shapeTexCoord = (
     vec2(st.x + 0.01 * n, st.y + 0.08 * yShift)
