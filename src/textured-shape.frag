@@ -2,8 +2,6 @@
 precision mediump float;
 #endif
 
-#include "../lib/lygia/draw/circle.glsl"
-#include "../lib/lygia/draw/digits.glsl"
 #include "../lib/lygia/space/ratio.glsl"
 #include "../lib/lygia/color/blend.glsl"
 #include "../lib/lygia/math/decimate.glsl"

@@ -12,13 +12,13 @@ uniform vec2 u_mouse;
 uniform vec2 u_resolution;
 uniform float u_time;
 
-uniform sampler2D   u_paperTexture;
-uniform vec2        u_paperTextureResolution;
+uniform sampler2D u_paperTexture;
+uniform vec2 u_paperTextureResolution;
 
-uniform sampler2D   u_perryMonochrome;
-uniform vec2        u_perryMonochromeResolution;
+uniform sampler2D u_perryMonochrome;
+uniform vec2 u_perryMonochromeResolution;
 
-void main (void) {
+void main(void) {
   vec2 st = gl_FragCoord.xy / u_resolution.xy;
   st = ratio(st, u_resolution);
   float decimateBase = 8.;
