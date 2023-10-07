@@ -42,7 +42,7 @@ void main(void) {
     )
   );
 
-  vec3 color = vec3(1.);
+  vec3 color = vec3(0.0);
   float lines = stroke(
     fract(100. * st.x + st.x * 40. * sin(0.01 * u_time)),
     0.10,
@@ -65,9 +65,17 @@ void main(void) {
     50. * pixel.x
   );
 
+  circles *= max(0., decimate(voronoise(
+    vec2(decimate(100. * fract(u_time * 0.0001), 4.), 0.) + st * 10.,
+    2.1,
+    1.
+  ), 2.));
 
-  float circlesAndLines = circles + lines;
-  color -= circlesAndLines;
+  float circlesAndLines = (
+    circles +
+    lines
+  );
+  color += circlesAndLines;
   // color -= stroke(lines, 0.1, 0.1);
   gl_FragColor = vec4(color, 1.);
 }
