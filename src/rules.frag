@@ -44,6 +44,7 @@ void main(void) {
       * init
       + (1. - init)
       * vec3(mod(floor(rule / pow(2., total)), 2.))
+      // * step(st.y, 1. - pt.y)
     );
     color = min(vec3(1.), color);
   #elif defined(BUFFER_1)
@@ -51,27 +52,9 @@ void main(void) {
   #else
     color = texture2D(u_buffer0, st).rgb;
 
-    float prevState = step(.5, texture2D(u_buffer1, vec2(0.5, 1.0)).r);
-    float total = -prevState;
-    for (int x = -1; x <= 1; x += 1) {
-      // for (int y = -1; y <= 1; y += 1) {
-        total += (
-          pow(2., 1. + float(x))
-          * step(0.5, texture2D(u_buffer1, vec2(0.5, 0.0) + pt * vec2(x, 0)).r)
-        );
-      // }
-    }
-
     color += digits(
       st - vec2(0.05),
-      // prevState
-      // texture2D(u_buffer1, vec2(0.5, 0.0) + pt * vec2(-1., 0.)).r
-      // step(
-      //   0.,
-      //   0.5
-      // )
-      // total
-      mod(floor(rule / pow(2., total)), 2.)
+      mod(floor(rule / pow(2., 0.)), 2.)
     );
   #endif
 
