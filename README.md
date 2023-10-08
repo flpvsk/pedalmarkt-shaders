@@ -13,3 +13,7 @@ glslViewer src/comet.frag -w 400 -h 300
 ```bash
 glslViewer src/textwrap.frag  -u_fullOfTextTexture assets/full-of-text.png  -w 400 -h 300
 ```
+
+```bash
+glslViewer src/rules.frag  -w 400 -h 300 --fps 1
+```

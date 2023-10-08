@@ -26,7 +26,7 @@ void main(void) {
       step(1. - st.y, pt.y)
       * step(0.5 - st.x, 0.5 * pt.x)
       * step(st.x, 0.5 * pt.x + 0.5)
-    ) ;
+    );
 
     vec2 prevSt = vec2(st.x, st.y);
     vec3 prevColor = texture2D(u_buffer1, prevSt).rgb;
@@ -36,7 +36,7 @@ void main(void) {
       // for (int y = -1; y <= 1; y += 1) {
         total += (
           pow(2., 1. - float(x))
-          * texture2D(u_buffer1, prevSt + pt * vec2(x, 0)).r
+          * texture2D(u_buffer1, prevSt + pt * vec2(x, 0.)).r
         );
       // }
     }
@@ -51,7 +51,7 @@ void main(void) {
     color = min(vec3(1.), color);
   #elif defined(BUFFER_1)
     vec2 shift = vec2(0., pt.y);
-    color = texture2D(u_buffer0, st + shift).rgb;
+    color = 1.0 * texture2D(u_buffer0, st + shift).rgb;
   #else
     color = texture2D(u_buffer0, st).rgb;
     // color = vec3(step(st.y, 1. - pt.y));
