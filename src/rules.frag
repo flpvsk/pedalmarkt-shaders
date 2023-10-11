@@ -19,20 +19,23 @@ void main(void) {
   vec2 st = gl_FragCoord.xy / u_resolution.xy;
   vec2 pixel = 1. / u_resolution.xy;
 
-  float rule = 13.;
-  float rows = 12.;
-  float cols = 11.;
+  // fb
+  // st = st + 0.001 * sin(u_time * 0.1);
+
+  float rule = 30.;
+  float rows = 10.;
+  float cols = 50.;
 
   float rowSize = u_resolution.y * pixel.y / rows;
-  rowSize = floor(rowSize / pixel.y) * pixel.y;
+  // rowSize = floor(rowSize / pixel.y) * pixel.y;
 
   float colSize = u_resolution.x * pixel.x / cols;
-  colSize = floor(colSize / pixel.x) * pixel.x;
+  // colSize = floor(colSize / pixel.x) * pixel.x;
   vec2 pt = vec2(colSize, rowSize);
   vec3 color;
 
   float currentRow = floor(
-    fract(u_time * 0.2) * rows
+    fract(u_time * 0.1) * rows
   );
   // currentRow = 6.;
   float prevRow = mod(currentRow - 1., rows);
@@ -84,18 +87,23 @@ void main(void) {
     color = 1.0 * texture2D(u_buffer0, st).rgb;
   #else
     color = texture2D(u_buffer0, st).rgb;
+
+    float tooDark = within(color.r, 0.0, 0.1);
+    color = tooDark * vec3(0.2, 0.3, 0.5) + (1. - tooDark) * color;
+
     color = (
       withinFrame * vec3(0.1, 0.12, 0.1) +
       withinFrame * color * vec3(0.4, 0.3, 0.2) +
       (1. - withinFrame) * color * vec3(0.5, 0.1, 0.3)
     );
 
+
     color += digits(
       st - vec2(0.05),
       // fract(u_time)
       // mod(floor(rule / pow(2., 0.)), 2.)
       // currentRow
-      rowSize
+      rule
       // u_resolution.y
       // rowSize
     );
