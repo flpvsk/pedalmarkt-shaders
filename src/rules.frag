@@ -22,9 +22,9 @@ void main(void) {
   // fb
   // st = st + 0.001 * sin(u_time * 0.1);
 
-  float rule = 30.;
-  float rows = 10.;
-  float cols = 50.;
+  float rule = 230.;
+  float rows = 120.;
+  float cols = 70.;
 
   float rowSize = u_resolution.y * pixel.y / rows;
   // rowSize = floor(rowSize / pixel.y) * pixel.y;
