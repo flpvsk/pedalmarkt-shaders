@@ -1,7 +1,3 @@
-#ifdef GL_ES
-precision mediump float;
-#endif
-
 #include "../lib/lygia/space/ratio.glsl"
 #include "../lib/lygia/math/decimate.glsl"
 #include "../lib/lygia/generative/cnoise.glsl"
@@ -19,9 +15,6 @@ precision mediump float;
 #include "../lib/lygia/animation/easing/exponential.glsl"
 #include "../lib/lygia/generative/voronoise.glsl"
 
-uniform vec2 u_resolution;
-uniform float u_time;
-
 float sinNorm(in float x) {
   return 0.5 + 0.5 * x;
 }
@@ -30,8 +23,8 @@ float whenBetween(float x, float lower, float upper) {
   return step(lower, x) * step(x, upper);
 }
 
-void main(void) {
-  vec2 st = gl_FragCoord.xy / u_resolution.xy;
+vec4 comet(vec2 xy) {
+  vec2 st = xy / u_resolution.xy;
   vec2 pixel = 1. / u_resolution.xy;
 
   st = ratio(st, u_resolution);
@@ -71,5 +64,5 @@ void main(void) {
   );
   // color += digits(st, easeTime);
   // color -= stroke(lines, 0.1, 0.1);
-  gl_FragColor = vec4(color, 1.);
+  return vec4(color, 1.);
 }
