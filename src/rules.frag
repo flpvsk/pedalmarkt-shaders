@@ -5,6 +5,11 @@ precision mediump float;
 #include "../lib/lygia/draw/digits.glsl"
 #include "../lib/lygia/math/within.glsl"
 #include "../lib/lygia/math/sign.glsl"
+#include "../lib/lygia/math/decimate.glsl"
+
+#include "../lib/lygia/generative/pnoise.glsl"
+
+#include "../lib/lygia/animation/easing.glsl"
 
 uniform vec2 u_resolution;
 uniform float u_time;
@@ -15,6 +20,18 @@ uniform float u_rule;
 uniform sampler2D u_buffer0;
 uniform sampler2D u_buffer1;
 
+float n1(in float v) {
+  return 0.5 + pnoise(vec2(v, v * 0.01), vec2(2.2));
+}
+
+float n2(in float v) {
+  return n1(decimate(fract(v * 0.008), 80.));
+}
+
+float n3(in float v) {
+  return n1(decimate(fract(v * 0.008), 40.));
+}
+
 void main(void) {
   vec2 st = gl_FragCoord.xy / u_resolution.xy;
   vec2 pixel = 1. / u_resolution.xy;
@@ -22,23 +39,29 @@ void main(void) {
   // fb
   // st = st + 0.001 * sin(u_time * 0.1);
 
-  float rule = 230.;
-  float rows = 120.;
-  float cols = 70.;
+  // float rule = floor(
+  //   256. * pnoise(vec2(u_time * 0.001, 0.), vec2(1.))
+  // );
+  float rule = floor(
+    256. * n2(u_time)
+  );
+  float rows = 300. * linearIn(n3(u_time * 0.1));
+  float cols = 3. * rows * linearIn(n1(n3(u_time)));
 
   float rowSize = u_resolution.y * pixel.y / rows;
-  // rowSize = floor(rowSize / pixel.y) * pixel.y;
 
   float colSize = u_resolution.x * pixel.x / cols;
-  // colSize = floor(colSize / pixel.x) * pixel.x;
   vec2 pt = vec2(colSize, rowSize);
   vec3 color;
 
   float currentRow = floor(
-    fract(u_time * 0.1) * rows
+    fract(u_time * 0.001 * (300. - rows)) * rows
   );
   // currentRow = 6.;
   float prevRow = mod(currentRow - 1., rows);
+  // prevRow = floor(
+  //   prevRow / (1. + 0.5 * exponentialIn(n2(u_time)) * rows)
+  // );
 
   float withinFrame = within(
     st.y,
@@ -92,7 +115,7 @@ void main(void) {
     color = tooDark * vec3(0.2, 0.3, 0.5) + (1. - tooDark) * color;
 
     color = (
-      withinFrame * vec3(0.1, 0.12, 0.1) +
+      withinFrame * vec3(0.0, 0.2, 0.2) +
       withinFrame * color * vec3(0.4, 0.3, 0.2) +
       (1. - withinFrame) * color * vec3(0.5, 0.1, 0.3)
     );
@@ -104,6 +127,7 @@ void main(void) {
       // mod(floor(rule / pow(2., 0.)), 2.)
       // currentRow
       rule
+      // rows
       // u_resolution.y
       // rowSize
     );

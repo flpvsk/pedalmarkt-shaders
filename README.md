@@ -15,5 +15,5 @@ glslViewer src/textwrap.frag  -u_fullOfTextTexture assets/full-of-text.png  -w 4
 ```
 
 ```bash
-glslViewer src/rules.frag  -w 400 -h 300 --fps 1
+glslViewer src/rules.frag  -w 400 -h 300
 ```
