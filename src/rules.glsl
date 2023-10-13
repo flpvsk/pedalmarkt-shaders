@@ -1,6 +1,5 @@
 #include "../lib/lygia/draw/digits.glsl"
 #include "../lib/lygia/math/within.glsl"
-#include "../lib/lygia/math/sign.glsl"
 #include "../lib/lygia/math/decimate.glsl"
 
 #include "../lib/lygia/generative/pnoise.glsl"
@@ -28,19 +27,22 @@ float _n3(in float v) {
 vec4 rules(in vec2 xy) {
   vec2 st = xy / u_resolution.xy;
   vec2 pixel = 1. / u_resolution.xy;
+  float frame = 0.02 * float(u_frame);
 
 
   // fb
   // st = st + 0.0001;
 
   // float rule = floor(
-  //   256. * pnoise(vec2(u_time * 0.001, 0.), vec2(1.))
+  //   256. * pnoise(vec2(frame * 0.001, 0.), vec2(1.))
   // );
-  float rule = floor(
-    256. * _n2(u_time)
-  );
-  float rows = 300. * linearIn(_n3(u_time * 0.1));
-  float cols = 3. * rows * linearIn(_n1(_n3(u_time)));
+  float rule = max(0., min(
+    256.,
+    floor(mod(frame, 256.) + _n2(frame) * 50.)
+  ));
+  float maxRows = 120.;
+  float rows = maxRows * linearIn(_n3(0.01 * frame));
+  float cols = 4. * rows * linearIn(_n1(_n3(0.01 * frame)));
 
   float rowSize = u_resolution.y * pixel.y / rows;
 
@@ -49,12 +51,12 @@ vec4 rules(in vec2 xy) {
   vec3 color;
 
   float currentRow = floor(
-    fract(u_time * 0.001 * (300. - rows)) * rows
+    fract(2. * frame) * rows
   );
   // currentRow = 6.;
   float prevRow = mod(currentRow - 1., rows);
   // prevRow = floor(
-  //   prevRow / (1. + 0.5 * exponentialIn(_n2(u_time)) * rows)
+  //   prevRow / (1. + 0.5 * exponentialIn(_n2(frame)) * rows)
   // );
 
   float withinFrame = within(
@@ -112,8 +114,8 @@ vec4 rules(in vec2 xy) {
     );
 
     color += digits(
-      st - vec2(0.05),
-      // fract(u_time)
+      st - vec2(0.10),
+      // frame
       // mod(floor(rule / pow(2., 0.)), 2.)
       // currentRow
       rule
@@ -125,7 +127,7 @@ vec4 rules(in vec2 xy) {
 
     color = blendScreen(
       color,
-      texture2D(u_paperTexture, st * 0.1 + vec2(0.1, 0.1)).rgb,
+      texture2D(u_paperTexture, st * 0.4 + vec2(0.1, 0.1)).rgb,
       0.3 * (1. - luma(color))
     );
 

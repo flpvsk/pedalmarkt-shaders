@@ -1,14 +1,10 @@
 #ifdef GL_ES
-precision mediump float;
+precision lowp float;
 #endif
-
-#include "../lib/lygia/animation/easing/sineInOut.glsl"
-#include "../lib/lygia/color/distance.glsl"
-#include "../lib/lygia/color/space/rgb2hsv.glsl"
 
 uniform vec2 u_resolution;
 uniform float u_time;
-uniform float u_frame;
+uniform int u_frame;
 
 uniform sampler2D u_buffer0;
 uniform sampler2D u_buffer1;
@@ -25,31 +21,23 @@ uniform vec2 u_perryMonochromeResolution;
 #include "./comet.glsl"
 
 void main(void) {
-  vec2 st = gl_FragCoord.xy / u_resolution.xy;
-  st = ratio(st, u_resolution);
-  float parts = 5.;
+  vec4 color = vec4(0.);
 
-  vec4 color1 = texturedShape(gl_FragCoord.xy);
-  vec4 color2 = rules(gl_FragCoord.xy);
-  vec4 color3 = march(gl_FragCoord.xy);
-  vec4 color4 = comet(gl_FragCoord.xy);
-  vec4 color5 = vec4(
-    rgb2hsv(vec3(st.y, 0.4, colorDistance(color3, color4))),
-  1.);
+  #ifdef SCENE_1
+    color = rules(gl_FragCoord.xy);
+  #endif
 
-  vec4 renders[5];
-  renders[0] = color1;
-  renders[1] = color2;
-  renders[2] = color3;
-  renders[3] = color4;
-  renders[4] = color5;
+  #ifdef SCENE_2
+    color = texturedShape(gl_FragCoord.xy);
+  #endif
 
-  float idx = floor(mod(u_time * 0.1, parts));
-  // float prevIdx = mod(idx - 1., parts);
-  // float mixVal = 0.5 + 0.5 * clamp(10. * sin(u_time * 0.1), -1., 1.);
-  // gl_FragColor = (
-  //   mix(renders[int(prevIdx)], renders[int(idx)], mixVal)
-  // );
+  #ifdef SCENE_3
+    color = march(gl_FragCoord.xy);
+  #endif
 
-  gl_FragColor = renders[int(idx)];
+  #ifdef SCENE_4
+    color = comet(gl_FragCoord.xy);
+  #endif
+
+  gl_FragColor = color;
 }
