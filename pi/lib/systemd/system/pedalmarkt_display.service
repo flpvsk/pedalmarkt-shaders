@@ -1,0 +1,16 @@
+[Unit]
+Description=Pedal Markt Display player
+
+[Service]
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/pi/.Xauthority
+ExecStart=/home/pi/scripts/start_pedalmarkt_display
+User=pi
+Group=pi
+Restart=always
+RestartSec=10s
+KillMode=process
+TimeoutSec=infinity
+
+[Install]
+WantedBy=graphical.target
