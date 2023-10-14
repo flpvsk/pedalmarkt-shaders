@@ -4,9 +4,9 @@ Description=Pedal Markt Display player
 [Service]
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
-ExecStart=/home/pi/scripts/start_pedalmarkt_display
-User=pi
-Group=pi
+ExecStart=/home/pedalmarkt/scripts/start_pedalmarkt_display
+User=pedalmarkt
+Group=pedalmarkt
 Restart=always
 RestartSec=10s
 KillMode=process

@@ -1,5 +1,6 @@
 import asyncio
 import subprocess
+import os
 
 async def main():
   cmd = [
@@ -8,13 +9,19 @@ async def main():
     '-u_perryMonochrome', 'assets/perry-monochrome.png',
     '-u_paperTexture', 'assets/copyscan14.jpg',
     '-fps', '12',
-    '-w', '400', '-h', '300',
-    '-noncurses',
+    '-f',
+    # '-w', '400', '-h', '300',
+    '--noncurses',
+    '--nocursor',
   ]
   proc = subprocess.Popen(
     cmd,
     stdin=subprocess.PIPE,
     encoding='utf8',
+    env={
+      'DISPLAY': ':0.0',
+      'PATH': os.environ['PATH'],
+    },
   )
 
   await asyncio.sleep(1)
@@ -41,6 +48,6 @@ async def main():
     proc.stdin.flush();
 
     scene = (scene + 1) % scenes
-    await asyncio.sleep(20)
+    await asyncio.sleep(24)
 
 asyncio.run(main())

@@ -32,11 +32,11 @@ void main(void) {
   #endif
 
   #ifdef SCENE_3
-    color = march(gl_FragCoord.xy);
+    color = comet(gl_FragCoord.xy);
   #endif
 
   #ifdef SCENE_4
-    color = comet(gl_FragCoord.xy);
+    color = march(gl_FragCoord.xy);
   #endif
 
   gl_FragColor = color;
