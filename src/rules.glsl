@@ -9,6 +9,8 @@
 #include "../lib/lygia/color/blend.glsl"
 #include "../lib/lygia/color/luma.glsl"
 
+#include "../lib/lygia/color/space/hsv2rgb.glsl"
+
 #ifndef SHR_RULES
 #define SHR_RULES
 
@@ -28,6 +30,7 @@ vec4 rules(in vec2 xy) {
   vec2 st = xy / u_resolution.xy;
   vec2 pixel = 1. / u_resolution.xy;
   float frame = 0.02 * float(u_frame);
+  vec3 color = vec3(0.);
 
 
   // fb
@@ -40,7 +43,8 @@ vec4 rules(in vec2 xy) {
     256.,
     floor(mod(frame, 256.) + _n2(frame) * 50.)
   ));
-  float maxRows = 120.;
+  // rule = 30.;
+  float maxRows = 80.;
   float rows = maxRows * linearIn(_n3(0.01 * frame));
   float cols = 4. * rows * linearIn(_n1(_n3(0.01 * frame)));
 
@@ -48,12 +52,10 @@ vec4 rules(in vec2 xy) {
 
   float colSize = u_resolution.x * pixel.x / cols;
   vec2 pt = vec2(colSize, rowSize);
-  vec3 color;
 
   float currentRow = floor(
-    fract(2. * frame) * rows
+    fract(0.5 * frame) * rows
   );
-  // currentRow = 6.;
   float prevRow = mod(currentRow - 1., rows);
   // prevRow = floor(
   //   prevRow / (1. + 0.5 * exponentialIn(_n2(frame)) * rows)
@@ -75,7 +77,7 @@ vec4 rules(in vec2 xy) {
 
     float prevRowY = 1. - (prevRow + 0.5) * rowSize;
     float cellNumX = ceil(st.x / colSize);
-    float cellX = (cellNumX + 0.5) * colSize;
+    float cellX = (cellNumX - 0.5) * colSize;
 
     vec3 prevColor = texture2D(u_buffer1, vec2(cellX, prevRowY)).rgb;
     float prevState = step(0.5, prevColor.r);
@@ -93,25 +95,38 @@ vec4 rules(in vec2 xy) {
       );
     }
 
-    color = (
+    color[0] = (
       1.
-      * init * vec3(1. - prevState)
+      * init * (1. - prevState)
       + (1. - init)
-      * vec3(mod(floor(rule / pow(2., total)), 2.))
+      * (mod(floor(rule / pow(2., total)), 2.))
     ) * withinFrame
-    + texture2D(u_buffer1, st).rgb * (1. - withinFrame);
+    + texture2D(u_buffer1, st).r * (1. - withinFrame);
 
-    color = min(vec3(1.), color);
+    color[1] = 1. - step(
+      0.47,
+      distance((cellNumX - 0.5) * colSize, st.x) / colSize
+    );
+
+    float stateChanged = withinFrame * step(0.1, abs(color[0] - prevState));
+    color[2] = (
+       stateChanged * 0. +
+      // state didnt change, increment
+      (1. - stateChanged) * (prevColor[2] + 0.01)
+    );
+
+    color = max(vec3(0.), min(vec3(1.), color));
   #elif defined(BUFFER_1)
-    color = 1.0 * texture2D(u_buffer0, st).rgb;
+    color = texture2D(u_buffer0, st).rgb;
   #else
     color = texture2D(u_buffer0, st).rgb;
 
-    color = (
-      withinFrame * vec3(0.0, 0.2, 0.2) +
-      withinFrame * color * vec3(0.4, 0.3, 0.2) +
-      (1. - withinFrame) * color * vec3(0.5, 0.1, 0.3)
-    );
+    color = hsv2rgb(vec3(
+      decimate(0.5 + 0.5 * sin(frame * 0.01), 30.),
+      0.5 * color[0] + color[2],
+      decimate(0.5 + 0.5 * st.y, rows) *
+      (0.8 * color[0] * color[1] + 0.2 * withinFrame)
+    ));
 
     color += digits(
       st - vec2(0.10),
