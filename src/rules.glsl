@@ -41,12 +41,12 @@ vec4 rules(in vec2 xy) {
   // );
   float rule = max(0., min(
     256.,
-    floor(mod(frame, 256.) + _n2(frame) * 50.)
+    floor(mod(frame * 0.1, 256.) + _n2(frame * 0.1) * 50.)
   ));
   // rule = 30.;
   float maxRows = 80.;
   float rows = maxRows * linearIn(_n3(0.01 * frame));
-  float cols = 4. * rows * linearIn(_n1(_n3(0.01 * frame)));
+  float cols = (0.4 + 0.8 * _n2(frame * 0.01)) * rows;
 
   float rowSize = u_resolution.y * pixel.y / rows;
 
@@ -104,7 +104,7 @@ vec4 rules(in vec2 xy) {
     + texture2D(u_buffer1, st).r * (1. - withinFrame);
 
     color[1] = 1. - step(
-      0.47,
+      0.1 + 0.37 * decimate(fract(_n1(frame * 0.01)), 10.),
       distance((cellNumX - 0.5) * colSize, st.x) / colSize
     );
 
@@ -122,10 +122,10 @@ vec4 rules(in vec2 xy) {
     color = texture2D(u_buffer0, st).rgb;
 
     color = hsv2rgb(vec3(
-      decimate(0.5 + 0.5 * sin(frame * 0.01), 30.),
-      0.5 * color[0] + color[2],
-      decimate(0.5 + 0.5 * st.y, rows) *
-      (0.8 * color[0] * color[1] + 0.2 * withinFrame)
+      decimate(0.5 + 0.5 * sin(frame * 0.1), 30.) - 0.1 * color[2],
+      0.6 * color[0] + color[2],
+      (0.4 + decimate(st.y, rows)) *
+      (0.7 * color[0] * color[1] + 0.2 * withinFrame)
     ));
 
     color += digits(
@@ -138,7 +138,7 @@ vec4 rules(in vec2 xy) {
       // resolution.y
       // rowSize
     );
-    color = min(vec3(1.), color);
+    color = max(vec3(0.), min(vec3(1.), color));
 
     color = blendScreen(
       color,

@@ -8,7 +8,7 @@ async def main():
     'src/main.frag',
     '-u_perryMonochrome', 'assets/perry-monochrome.png',
     '-u_paperTexture', 'assets/copyscan14.jpg',
-    '-fps', '12',
+    '-fps', '8',
     '-f',
     # '-w', '400', '-h', '300',
     '--noncurses',
