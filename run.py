@@ -8,7 +8,7 @@ async def main():
     'src/main.frag',
     '-u_perryMonochrome', 'assets/perry-monochrome.png',
     '-u_paperTexture', 'assets/copyscan14.jpg',
-    '-fps', '8',
+    '-fps', '12',
     '-f',
     # '-w', '400', '-h', '300',
     '--noncurses',
@@ -48,6 +48,6 @@ async def main():
     proc.stdin.flush();
 
     scene = (scene + 1) % scenes
-    await asyncio.sleep(24)
+    await asyncio.sleep(44)
 
 asyncio.run(main())
