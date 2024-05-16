@@ -9,8 +9,9 @@ async def main():
     '-u_perryMonochrome', 'assets/perry-monochrome.png',
     '-u_paperTexture', 'assets/copyscan14.jpg',
     '-fps', '12',
-    '-f',
-    # '-w', '400', '-h', '300',
+    # '-f',
+    '-w', '400', '-h', '300',
+    '--audio',
     '--noncurses',
     '--nocursor',
   ]
@@ -26,7 +27,8 @@ async def main():
 
   await asyncio.sleep(1)
   scene = 0
-  scenes = 4
+  # scenes = 4
+  scenes = 1
 
   while (True):
     prev_scene = (scene - 1) % scenes
@@ -39,12 +41,21 @@ async def main():
     if (proc.stdin == None):
       return
 
-    proc.stdin.write(
-      'defines,SCENE_{}\nundefine,SCENE_{}\n'.format(
-        scene + 1,
-        prev_scene + 1
+    if scene != prev_scene:
+      proc.stdin.write(
+        'defines,SCENE_{}\nundefine,SCENE_{}\n'.format(
+          scene + 1,
+          prev_scene + 1
+        )
       )
-    )
+
+    if scene == prev_scene:
+      proc.stdin.write(
+        'defines,SCENE_{}\n'.format(
+          scene + 1
+        )
+      )
+
     proc.stdin.flush();
 
     scene = (scene + 1) % scenes

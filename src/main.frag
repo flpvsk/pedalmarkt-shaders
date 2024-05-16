@@ -19,11 +19,16 @@ uniform vec2 u_perryMonochromeResolution;
 #include "./texturedShape.glsl"
 #include "./march.glsl"
 #include "./comet.glsl"
+#include "./scope1.glsl"
 
 void main(void) {
   vec4 color = vec4(0.);
 
   #ifdef SCENE_1
+    color = scope1(gl_FragCoord.xy);
+  #endif
+
+  #ifdef SCENE_x
     color = rules(gl_FragCoord.xy);
   #endif
 

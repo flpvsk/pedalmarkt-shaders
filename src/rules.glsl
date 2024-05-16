@@ -50,7 +50,7 @@ vec4 rules(in vec2 xy) {
 
   float rowSize = u_resolution.y * pixel.y / rows;
 
-  float colSize = u_resolution.x * pixel.x / cols;
+  float colSize = 2. * _n1(frame * 0.02) * u_resolution.x * pixel.x / cols;
   vec2 pt = vec2(colSize, rowSize);
 
   float currentRow = floor(
