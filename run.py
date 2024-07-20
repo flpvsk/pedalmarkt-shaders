@@ -13,7 +13,7 @@ async def main():
     '-fps', '12',
     '-f',
     # '-w', '400', '-h', '300',
-    '--audio',
+    # '--audio',
     '--noncurses',
     '--nocursor',
   ]
@@ -28,7 +28,7 @@ async def main():
   )
 
   await asyncio.sleep(1)
-  scope_scene = 0
+  # scope_scene = 0
   text_scene = 5
   other_scenes = [ 1, 2, 3, 4]
   prev_scene = 6
@@ -37,16 +37,18 @@ async def main():
     if (proc.stdin == None):
       return
 
-    prev_scene = show_scene(proc, scope_scene, prev_scene)
-    await asyncio.sleep(44)
-    prev_scene = show_scene(proc, text_scene, prev_scene)
-    await asyncio.sleep(12)
+    # prev_scene = show_scene(proc, scope_scene, prev_scene)
+    # await asyncio.sleep(44)
+    if random.random() < 0.3:
+      prev_scene = show_scene(proc, text_scene, prev_scene)
+      await asyncio.sleep(12)
+
     prev_scene = show_scene(
         proc,
         random.choice(other_scenes),
         prev_scene
     )
-    await asyncio.sleep(22)
+    await asyncio.sleep(32)
 
 def show_scene(proc, scene, prev_scene):
     if scene == prev_scene:
