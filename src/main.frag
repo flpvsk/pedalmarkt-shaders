@@ -18,12 +18,25 @@ uniform vec2 u_perryMonochromeResolution;
 uniform sampler2D u_textTexture;
 uniform vec2 u_textTextureResolution;
 
+uniform sampler2D u_fiz1Texture;
+uniform vec2 u_fiz1TextureResolution;
+
+uniform sampler2D u_fiz2Texture;
+uniform vec2 u_fiz2TextureResolution;
+
+uniform sampler2D u_fiz3Texture;
+uniform vec2 u_fiz3TextureResolution;
+
 #include "./rules.glsl"
 #include "./texturedShape.glsl"
 #include "./march.glsl"
 #include "./comet.glsl"
 #include "./scope1.glsl"
 #include "./text.glsl"
+
+#include "./fiz1.glsl"
+#include "./fiz2.glsl"
+#include "./fiz3.glsl"
 
 void main(void) {
   vec4 color = vec4(0.);
@@ -37,7 +50,7 @@ void main(void) {
   #endif
 
   #ifdef SCENE_3
-    color = texturedShape(gl_FragCoord.xy);
+    color = fiz3(gl_FragCoord.xy);
   #endif
 
   #ifdef SCENE_4
@@ -45,11 +58,11 @@ void main(void) {
   #endif
 
   #ifdef SCENE_5
-    color = march(gl_FragCoord.xy);
+    color = fiz1(gl_FragCoord.xy);
   #endif
 
   #ifdef SCENE_6
-    color = text(gl_FragCoord.xy);
+    color = fiz2(gl_FragCoord.xy);
   #endif
 
   gl_FragColor = color;

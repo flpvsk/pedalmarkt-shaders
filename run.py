@@ -10,9 +10,12 @@ async def main():
     '-u_perryMonochrome', 'assets/perry-monochrome.png',
     '-u_paperTexture', 'assets/copyscan14.jpg',
     '-u_textTexture', 'assets/pedal-expo-text.png',
+    '-u_fiz1Texture', 'assets/fiz-exp/1.jpg',
+    '-u_fiz2Texture', 'assets/fiz-exp/2.jpg',
+    '-u_fiz3Texture', 'assets/fiz-exp/3.jpg',
     '-fps', '12',
-    '-f',
-    # '-w', '400', '-h', '300',
+    # '-f',
+    '-w', '400', '-h', '300',
     # '--audio',
     '--noncurses',
     '--nocursor',
@@ -41,14 +44,14 @@ async def main():
     # await asyncio.sleep(44)
     if random.random() < 0.3:
       prev_scene = show_scene(proc, text_scene, prev_scene)
-      await asyncio.sleep(12)
+      await asyncio.sleep(32)
 
     prev_scene = show_scene(
         proc,
         random.choice(other_scenes),
         prev_scene
     )
-    await asyncio.sleep(32)
+    await asyncio.sleep(12)
 
 def show_scene(proc, scene, prev_scene):
     if scene == prev_scene:
