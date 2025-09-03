@@ -2,13 +2,15 @@ Code for the TV in the display window of Pedal Markt.
 
 ## Requirements
 
+[assets]: https://drive.google.com/drive/folders/1lgjRLbbvZuYJF8BKc0wfflkvU1bMVKeY?usp=sharing
+
 * [glslViewer](https://github.com/patriciogonzalezvivo/glslViewer)
 * [python3](https://www.python.org/downloads/)
-* [Folder of assets](https://drive.google.com/drive/folders/1lgjRLbbvZuYJF8BKc0wfflkvU1bMVKeY?usp=sharing)
+* [Folder of assets][assets]
 
 ## Running locally
 
-1. Download the `assets` folder and place into the root of
+1. Download the [assets][assets] folder and place into the root of
    the project;
 
 2. Run
