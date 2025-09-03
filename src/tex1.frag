@@ -3,16 +3,6 @@
 precision mediump float;
 #endif
 
-uniform vec2        u_resolution;
-
-uniform sampler2D   u_tex0;
-uniform vec2        u_tex0Resolution;
-
-uniform sampler2D   u_tex1;
-uniform vec2        u_tex1Resolution;
-
-varying vec2        v_texcoord;
-
 void main (void) {
     vec3 color = vec3(0.0);
     vec2 pixel = 1.0/u_resolution.xy;
